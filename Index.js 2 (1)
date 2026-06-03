@@ -1,0 +1,29 @@
+const startSock = async () => {
+    const { state, saveCreds } = await useMultiFileAuthState('./session')
+    const { version } = await fetchLatestBaileysVersion()
+
+    const sock = makeWASocket({
+        version,
+        logger: logger,
+        auth: state,
+        browser: ['Ultraviolet-MD', 'Chrome', '1.0.0'],
+        printQRInTerminal: false // we handle QR manually
+    })
+
+    // QR / Pairing Code handler
+    if (!sock.authState.creds.registered) {
+        if (process.env.SESSION_ID) {
+            console.log('Using existing SESSION_ID')
+        } else {
+            setTimeout(async () => {
+                let phoneNumber = process.env.OWNER_NUMBER // put your number in .env without +
+                if (!phoneNumber) {
+                    console.log('Enter OWNER_NUMBER in .env to use pairing code')
+                    return
+                }
+                let code = await sock.requestPairingCode(phoneNumber.replace(/[^0-9]/g, ''))
+                console.log(`\n┏━━━━━━━━━━━━━━━┓`)
+                console.log(`┃  PAIRING CODE: ${code}  ┃`)
+                console.log(`┗━━━━━━━━━━━━━━━┛`)
+                console.log(`Go to WhatsApp > Linked Devices > Link with phone number > Enter this code`)
+            }, 3000

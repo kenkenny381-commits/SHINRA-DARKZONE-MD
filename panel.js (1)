@@ -1,0 +1,32 @@
+module.exports = async (sock, m, command, args, from, isGroup, isOwner) => {
+    const prefix = process.env.PREFIX || '.'
+
+    if (!isOwner) return sock.sendMessage(from, { text: '❌ Owner only command.' }, { quoted: m })
+
+    if (command === 'cpanelmenu' || command === 'panel') {
+        let txt = `
+┏━━〔 CPANEL-CMD 〕━━━━━━━━━━━━━┓
+┃ ${prefix}setlink - Set panel URL
+┃ ${prefix}setkey - Set panel API key
+┃ ${prefix}nestconfig - Set nest/egg config
+┃ ${prefix}createuser - Create panel user
+┃ ${prefix}createpanel - Create server
+┃ ${prefix}createunlimited - Create unlimited server
+┃ ${prefix}setpayment - Set payment info
+┃ ${prefix}prompt - Send panel prompt
+┗━━━━━━━━━━━━━━━┛
+
+Usage: ${prefix}createuser username password email
+`
+        return sock.sendMessage(from, { text: txt }, { quoted: m })
+    }
+
+    if (command === 'setlink') {
+        if (!args[0]) return sock.sendMessage(from, { text: `Usage: ${prefix}setlink https://panel.domain.com` }, { quoted: m })
+        global.db.panel = global.db.panel || {}
+        global.db.panel.link = args[0]
+        return sock.sendMessage(from, { text: `✅ Panel link set to: ${args[0]}` }, { quoted: m })
+    }
+
+    if (command === 'setkey') {
+        if (!args[0]) return sock.sendMessage(from, { text: `Usage: ${prefix}setkey your-api-key` }, {

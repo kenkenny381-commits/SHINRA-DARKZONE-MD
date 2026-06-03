@@ -1,0 +1,23 @@
+{
+  "name": "Ultraviolet-MD",
+  "description": "Shenks Ultraviolet MD WhatsApp Bot",
+  "repository": "https://github.com/yourusername/ultraviolet-md",
+  "keywords": ["whatsapp", "bot", "baileys"],
+  "env": {
+    "SESSION_ID": {
+      "description": "Your Baileys session string"
+    },
+    "PREFIX": {
+      "description": "Bot prefix",
+      "value": "."
+    },
+    "OWNER_NUMBER": {
+      "description": "Owner number with country code"
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}
